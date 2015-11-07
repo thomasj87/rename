@@ -41,18 +41,24 @@ def query_yes_no(question, default="yes"):
 
 def main():
 
-    if len(sys.argv) < 4:
+
+    if len(sys.argv) < 3:
         logging.error("Not enough arguments!")
         print 'Help: ' \
-              '<directory> <pattern> <rename_prefix> (index start number)'
+              '<directory> <pattern> (rename_prefix) (index start number)'
         sys.exit(10)
-
 
     directory = sys.argv[1]
     to_find = sys.argv[2]
-    rename_prefix = sys.argv[3]
+
 
     list_files = glob.glob1(directory, to_find)
+
+    if len(sys.argv) >= 4:
+        rename_prefix = sys.argv[3]
+    else:
+        last_dir = directory.split('/')[-2:-1]
+        rename_prefix = last_dir[0] + '_'
 
     if len(sys.argv) >= 5:
         index = int(sys.argv[4])
