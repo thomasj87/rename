@@ -7,6 +7,7 @@ import glob
 import os
 import sys
 import datetime
+import time
 try:
     import exifread
 except:
@@ -48,8 +49,12 @@ def get_creat_date(file):
         f = open(file, 'rb')
         tags = exifread.process_file(f)
 
-        image_create_date = tags['Image DateTime']
-        file_date_time = datetime.datetime.strptime(str(image_create_date), "%Y:%m:%d %H:%M:%S")
+        if 'Image DateTime' in tags:
+            file_date_time = datetime.datetime.strptime(str(tags['Image DateTime']), "%Y:%m:%d %H:%M:%S")
+        else:
+            system_time = time.ctime(os.path.getctime(file))
+            file_date_time = datetime.datetime.strptime(system_time, "%c")
+
         if file_date_time.minute < 10:
             minute = '0' + str(file_date_time.minute)
         else:
