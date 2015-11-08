@@ -126,19 +126,19 @@ def main():
         if os.path.isfile(item[1]):
             logging.warn("{0} already exists!".format(item[1]))
 
-    # confirm = query_yes_no("You want to rename these files?", default="no")
+    confirm = query_yes_no("You want to rename these files?", default="no")
 
-    # if confirm:
-    #     for item in execute_list:
-    #         if os.path.isfile(item[1]):
-    #             logging.warn("{0} already exists!".format(item[1]))
-    #             logging.warn("File will not be overwritten!".format(item[1]))
-    #         else:
-    #             os.rename(item[0], item[1])
-    #             print "Renamed {0} to {1}!".format(item[0], item[1])
-    # else:
-    #     print "No changes made!"
-    #     print "Exiting..."
+    if confirm:
+        for item in execute_list:
+            if os.path.isfile(item[1]):
+                logging.warn("{0} already exists!".format(item[1]))
+                logging.warn("File will not be overwritten!".format(item[1]))
+            else:
+                os.rename(item[0], item[1])
+                print "Renamed {0} to {1}!".format(item[0], item[1])
+    else:
+        print "No changes made!"
+        print "Exiting..."
 
 if __name__ == '__main__':
 
