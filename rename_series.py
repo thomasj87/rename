@@ -91,20 +91,23 @@ def get_creat_date(file):
 def main():
 
 
-    if len(sys.argv) < 5:
+    if len(sys.argv) < 4:
         logging.error("Not enough arguments! (%s)" % len(sys.argv))
         print 'Help: ' \
-              '<directory> <match pattern> <change> <pre-pattern> [post-pattern]'
+              '<directory> <match pattern> <change> [pre-pattern] [post-pattern]'
         sys.exit(10)
 
     directory = sys.argv[1]
     to_find = sys.argv[2]
     change = sys.argv[3]
-    pre_pat = sys.argv[4]
+    pre_pat = None
     post_pat = None
 
 
     list_files = glob.glob1(directory, to_find)
+
+    if len(sys.argv) == 5:
+        pre_pat = sys.argv[4]
 
     if len(sys.argv) == 6:
         post_pat = sys.argv[5]
@@ -128,15 +131,22 @@ def main():
 
         title, ext = os.path.splitext(os.path.basename(existing_path))
 
-        if post_pat:
+        if pre_pat:
+            re_search = r"(" + re.escape(pre_pat) + r")(\d+)"
+        elif post_pat:
             re_search = r"(" + re.escape(pre_pat) + r")(\d+)(" + re.escape(post_pat) + r")"
         else:
-            re_search = r"(" + re.escape(pre_pat) + r")(\d+)"
+            re_search = r"(\d+)"
+
 
         try:
             match = re.search(re_search, title)
 
-            serie_id = match.group(2)
+            if not pre_pat:
+                serie_id = match.group(1)
+            else:
+                serie_id = match.group(2)
+
             new = directory + "/" + change + serie_id + ext
 
             execute_list.append([existing_path, new])
